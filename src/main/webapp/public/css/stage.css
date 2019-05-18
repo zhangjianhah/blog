@@ -1,0 +1,53 @@
+.top{
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+}
+.contents{
+    margin-top: 35px;
+}
+.categorys{
+    width:20%;
+    position: fixed;
+}
+
+
+
+.conlist-item{
+    height: 100px;
+    padding: 18px 24px;
+    overflow: hidden;
+}
+.blogitemleft{
+    float: left;
+    width: 70%;
+    height: 100%;
+}
+
+.blogitemright{
+    float: left;
+    width: 30%;
+    height: 60px;
+}
+.blogitemright img{
+    width: 60px;
+    height: 60px;
+}
+.conlist-item-con{
+    height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.conlist-item-info{
+    height: 30px;
+    overflow: hidden;
+}
+.register{
+    margin-left: 345px;
+}
+
+/*.keyword{*/
+    /*width: 100%;*/
+/*}*/

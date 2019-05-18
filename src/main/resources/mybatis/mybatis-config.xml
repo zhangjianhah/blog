@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+
+<configuration>
+
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+
+
+    <!-- 给起别名 -->
+    <!--
+         批量定义别名
+        name:指定包名，将定义包下的所以pojo定义别名，别名为类名(首字母大写或小写都可以)
+     -->
+    <typeAliases>
+        <package name="com.zj.blog.pojo"/>
+    </typeAliases>
+
+
+
+
+</configuration>

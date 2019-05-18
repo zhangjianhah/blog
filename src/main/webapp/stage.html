@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客</title>
+    <base target=_blank>
+    <link rel="stylesheet" href="./public/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="./public/css/stage.css">
+</head>
+<body>
+
+<div class="container" style="width: 100%;">
+    <div class="top row" >
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" class="form-control keyword" placeholder="请输入搜索内容">
+                <span class="input-group-btn">
+                    <button class="btn btn-default searchbtn" type="button">Go!</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+        <!--<div class="pull-left col-md-offset-4 col-md-4"><input type="text" placeholder="请输入搜索内容" class="keyword"></div>-->
+        <!--<div class="pull-left"><input type="button" value="确定" class="searchbtn"></div>-->
+        <div class="pull-left"><input type="button" value="注册" class="register btn btn-default " onclick="registerfunc()"></div>
+        <div class="pull-left"><input type="button" value="登陆" class="login btn btn-default " onclick="loginfunc()"></div>
+        <div class="pull-left"><input type="button" value="管理" class="logout btn btn-default " onclick="tomanagermentfunc()"></div>
+
+
+    </div>
+    <div >
+        <div class="contents pull-left categorys">
+            <ul class="list-group categorylist"></ul>
+        </div>
+
+        <div class="contents pull-left blogList" style="width:70%;margin-left: 20%;">
+            <ul class="list-group conlist"></ul>
+        </div>
+    </div>
+</div>
+
+</body>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="./public/js/jquery-3.3.1.min.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="./public/js/bootstrap.min.js"></script>
+<script src="./public/js/jquery.cookie.js"></script>
+<!-- 加载自定义的js -->
+<script src="./public/js/stage.js"></script>
+
+<script>
+    var currentUrl = window.location.href;
+    var lastbias = currentUrl.lastIndexOf('/');
+    var basepath = currentUrl.substr(0,lastbias+1);
+    var resourcebasepath = basepath.substr(0,basepath.length-1);
+    var lastbutonebias = resourcebasepath.lastIndexOf('/');
+    var resourcespath =resourcebasepath.substr(0,lastbutonebias+1);
+    resourcespath = resourcespath+"resources/";
+    init(basepath,resourcespath);
+
+
+
+
+
+</script>
+</html>

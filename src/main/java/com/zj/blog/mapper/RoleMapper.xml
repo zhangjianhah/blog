@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.blog.mapper.RoleMapper">
+
+    <select id="selectAllPower" parameterType="string" resultType="map">
+        SELECT a.sid,a.sname,SUM(a.getmethod) gets,SUM(a.postmethod) posts,SUM(a.putmethod) puts,SUM(a.deletemethod) deletes
+FROM(
+select a.sid,a.sname,c.rname,d.mname,if(d.mname='GET','1','0') getmethod,if(d.mname='POST','1','0') postmethod
+,if(d.mname='PUT','1','0') putmethod,if(d.mname='DELETE','1','0') deletemethod
+ from zj_resources a left join zj_powers b ON a.sname = b.sname and b.delflg = '00'  and b.rname = #{rname}
+LEFT JOIN zj_role c ON c.rname = b.rname
+LEFT JOIN zj_method d ON b.mname = d.mname
+where a.delflg = '00'
+) a GROUP BY a.sid order by a.sname
+
+    </select>
+
+    <insert id="insertPower" parameterType="map">
+        INSERT INTO zj_powers (mname,rname,sname,delflg)
+        VALUES (#{mname},#{rname},#{sname},#{delflg})
+        ON DUPLICATE KEY UPDATE delflg = #{delflg}
+    </insert>
+
+
+    <select id="selectOnePower" parameterType="string" resultType="map">
+        select * from zj_powers where mname = #{mname} and rname = #{rname}
+        and sname = #{sname} and delflg = '00' limit 0,1
+    </select>
+
+    <select id="getRoleIdByName" parameterType="string" resultType="string">
+        select rid from zj_role where rname = #{rname} and delflg = '00'
+    </select>
+
+    <select id="getNormalUserIdentity" resultType="string">
+        SELECT rid FROM zj_role WHERE rname in ('普通用户','管理员') and delflg = '00'
+    </select>
+
+    <select id="getUsermodule" parameterType="string" resultType="string">
+        SELECT b.rvalue FROM zj_channelrole a
+        LEFT JOIN zj_channel b ON a.changnelid = b.cid
+        LEFT JOIN zj_role c ON a.identityid = c.rid
+        WHERE c.rname = #{identityid}
+    </select>
+
+
+</mapper>

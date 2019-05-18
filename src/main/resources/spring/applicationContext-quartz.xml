@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:task="http://www.springframework.org/schema/task"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd ">
+
+    <context:component-scan base-package="com.zj.blog.quartz" />
+
+    <task:annotation-driven />
+    <!-- 注入任务处理类bean -->
+    <bean id="myJob" class="com.zj.blog.quartz.MyTiming"></bean>
+
+    <!-- 任务触发器详细信息bean -->
+    <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="myJob"></property>
+        <property name="targetMethod" value="showHello"></property>
+        <property name="concurrent" value="false" />
+        <!-- 作业不并发调度，这里的意思是如果这个方法一直执行到下一次这个方法执行了，为false则这个方法不再执行，为true则两个都执行 -->
+    </bean>
+
+
+    <!-- 定义trigger 触发器 -->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="jobDetail"></property>
+        <property name="cronExpression" value="0 0/1 * * * ?"></property>
+    </bean>
+
+
+    <!-- 设置触发器调度工厂 -->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <!-- <ref bean="cronTrigger"/> -->
+            </list>
+        </property>
+    </bean>
+
+</beans>

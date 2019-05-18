@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.blog.mapper.ResourcesMapper">
+    <insert id="insertResources" parameterType="resources" >
+        insert into zj_resources (
+        <trim suffixOverrides=",">
+            <if test="sid != null and sid != ''">sid,</if>
+            <if test="sname != null and sname != ''">sname,</if>
+            <if test="createtime != null and createtime != ''">createtime,</if>
+            <if test="delflg != null and delflg != ''">delflg,</if>
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            <if test="sid != null and sid != ''">#{sid},</if>
+            <if test="sname != null and sname != ''">#{sname},</if>
+            <if test="createtime != null and createtime != ''">#{createtime},</if>
+            <if test="delflg != null and delflg != ''">#{delflg},</if>
+        </trim>
+        )
+    </insert>
+
+    <select id="selectAllResource" resultType="map">
+        select sid,sname from zj_resources where delflg = '00' order by sname asc
+    </select>
+
+    <update id="updateResources" parameterType="resources" >
+        update zj_resources set
+        <trim suffixOverrides=",">
+            <if test="sname != null and sname != ''">sname = #{sname},</if>
+            <if test="createtime != null and createtime != ''">createtime = ${createtime},</if>
+            <if test="delflg != null and delflg != ''">delflg = #{delflg},</if>
+        </trim>
+        where sid = #{sid}
+    </update>
+</mapper>

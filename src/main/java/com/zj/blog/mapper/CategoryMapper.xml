@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.blog.mapper.CategoryMapper">
+    <insert id="addActegory" parameterType="category">
+        insert into zj_category (
+        <trim suffixOverrides=",">
+            <if test="cid != null and cid != ''">cid,</if>
+            <if test="cname != null and cname != ''">cname,</if>
+            <if test="createtime != null and createtime != ''">createtime,</if>
+            <if test="delflg != null and delflg != ''">delflg,</if>
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            <if test="cid != null and cid != ''">#{cid},</if>
+            <if test="cname != null and cname != ''">#{cname},</if>
+            <if test="createtime != null and createtime != ''">#{createtime},</if>
+            <if test="delflg != null and delflg != ''">#{delflg},</if>
+        </trim>
+        )
+    </insert>
+
+    <select id="selectAllCategory" resultType="category">
+        select * from zj_category where delflg = '00'
+    </select>
+
+    <update id="updateCategory" parameterType="category" >
+        update zj_category set
+        <trim suffixOverrides=",">
+            <if test="cname != null and cname != ''">cname = #{cname},</if>
+            <if test="createtime != null and createtime != ''">createtime = #{createtime},</if>
+            <if test="delflg != null and delflg != ''">delflg = #{delflg},</if>
+        </trim>
+        where cid = #{cid}
+    </update>
+
+</mapper>

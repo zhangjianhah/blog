@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.blog.mapper.BlogMapper">
+    <insert id="addBlog" parameterType="blog">
+        insert into zj_blog (
+        <trim suffixOverrides=",">
+            <if test="bid != null and bid != ''">bid,</if>
+            <if test="btitle != null and btitle != ''">btitle,</if>
+            <if test="bcontext != null and bcontext != ''">bcontext,</if>
+            <if test="createuid != null and createuid != ''">createuid,</if>
+            <if test="createtime != null and createtime != ''">createtime,</if>
+            <if test="updatetime != null and updatetime != ''">updatetime,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="delflg != null and delflg != ''">delflg,</if>
+            <if test="visible != null and visible != ''">visible,</if>
+            <if test="starnum != null and starnum != ''">starnum,</if>
+            <if test="commentnum != null and commentnum != ''">commentnum,</if>
+            <if test="collectionnum != null and collectionnum != ''">collectionnum,</if>
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            <if test="bid != null and bid != ''">#{bid},</if>
+            <if test="btitle != null and btitle != ''">#{btitle},</if>
+            <if test="bcontext != null and bcontext != ''">#{bcontext},</if>
+            <if test="createuid != null and createuid != ''">#{createuid},</if>
+            <if test="createtime != null and createtime != ''">#{createtime},</if>
+            <if test="updatetime != null and updatetime != ''">#{updatetime},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="delflg != null and delflg != ''">#{delflg},</if>
+            <if test="visible != null and visible != ''">#{visible},</if>
+            <if test="starnum != null and starnum != ''">#{starnum},</if>
+            <if test="commentnum != null and commentnum != ''">#{commentnum},</if>
+            <if test="collectionnum != null and collectionnum != ''">#{collectionnum},</if>
+        </trim>
+        )
+    </insert>
+
+    <select id="selectBlogByUid" parameterType="map" resultType="map">
+        select a.*,b.* from zj_blog a
+        left join zj_category b on a.category = b.cid
+        LEFT JOIN zj_user c ON a.createuid = c.uid
+        where c.uname = #{username} and
+         a.delflg = '00' order by a.createtime desc
+        <if test="offset != null and size != null">
+            limit #{offset},#{size}
+        </if>
+    </select>
+
+    <select id="selectBlogCountByUid" parameterType="string" resultType="integer">
+        select count(a.bid) from zj_blog a left join zj_user b on b.uid = a.createuid
+        where b.uname = #{uname} and a.delflg = '00'
+    </select>
+
+    <update id="updateBlogByBid" parameterType="blog">
+        update zj_blog set
+        <trim suffixOverrides=",">
+            <if test="btitle != null and btitle != ''">btitle = #{btitle},</if>
+            <if test="bcontext != null and bcontext != ''">bcontext = #{bcontext},</if>
+            <if test="createuid != null and createuid != ''">createuid = #{createuid},</if>
+            <if test="createtime != null and createtime != ''">createtime = #{createtime},</if>
+            <if test="updatetime != null and updatetime != ''">updatetime = #{updatetime},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="delflg != null and delflg != ''">delflg = #{delflg},</if>
+            <if test="visible != null and visible != ''">visible = #{visible},</if>
+            <if test="starnum != null and starnum != ''">starnum = #{starnum},</if>
+            <if test="commentnum != null and commentnum != ''">commentnum = #{commentnum},</if>
+            <if test="collectionnum != null and collectionnum != ''">collectionnum = #{collectionnum},</if>
+            <if test="clicknum != null and clicknum != ''">clicknum = clicknum+1,</if>
+        </trim>
+        where  bid = #{bid}
+    </update>
+
+    <select id="selectBlogOnTourist" parameterType="map" resultType="map">
+        select a.*,b.uname,b.img,ca.cname from zj_blog a left join zj_user b on a.createuid = b.uid
+        left join zj_category ca on a.category = ca.cid
+        where a.delflg = '00' and a.visible = '00' and b.delflg = '00' and ca.delflg = '00'
+        <if test="keyword != null and keyword != ''">
+            and (a.btitle like concat('%',#{keyword},'%') or a.bcontext like concat('%',#{keyword},'%'))
+        </if>
+        <if test="categoryid != null and categoryid != ''">
+            and ca.cid = #{categoryid}
+        </if>
+        order by a.createtime desc
+        <if test="offset != null and size != null">
+            limit #{offset},#{size}
+        </if>
+    </select>
+
+    <select id="selectBlogCountOnTourist" parameterType="map" resultType="integer">
+        select count(a.bid) from zj_blog a left join zj_user b on a.createuid = b.uid
+        left join zj_category ca on a.category = ca.cid
+        where a.delflg = '00' and a.visible = '00' and b.delflg = '00' and ca.delflg = '00'
+        <if test="keyword != null and keyword != ''">
+            and (a.btitle like concat('%',#{keyword},'%') or a.bcontext like concat('%',#{keyword},'%'))
+        </if>
+        <if test="categoryid != null and categoryid != ''">
+            and ca.cid = #{categoryid}
+        </if>
+    </select>
+
+    <select id="selectBlogAndUser" parameterType="string" resultType="map">
+        SELECT a.*,b.uname,b.img,c.cname as categoryname from zj_blog a LEFT JOIN zj_user b ON a.createuid = b.uid
+        left join zj_category c on c.cid = a.category
+        WHERE a.delflg = '00' and
+        b.delflg = '00' AND a.bid = #{bid}
+    </select>
+
+    <update id="updateBlogCollectionNum" parameterType="string" >
+        update zj_blog set
+        <if test="delflg == '00'">
+            collectionnum = collectionnum+1
+        </if>
+        <if test="delflg == '01'">
+            collectionnum = collectionnum-1
+        </if>
+        where bid = #{bid}
+    </update>
+
+    <select id="selecetUserInfoByBlog" parameterType="string" resultType="map">
+        SELECT SUM(commentnum) as commentcount,SUM(collectionnum) as collectioncount,COUNT(bid) as blogcount
+from zj_blog WHERE createuid = (
+SELECT createuid FROM zj_blog WHERE bid = #{bid}
+)
+    </select>
+
+    <update id="addBlogCommentNum" parameterType="string">
+        update zj_blog set commentnum = commentnum+1 where bid = #{bid} and delflg = '00'
+    </update>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.blog.mapper.CollectionMapper">
+
+    <insert id="insetCollection" parameterType="star">
+        insert into zj_collection (
+        <trim suffixOverrides=",">
+            <if test="cid != null and cid !=''">cid,</if>
+            <if test="bid != null and bid !=''">bid,</if>
+            <if test="uid != null and uid !=''">uid,</if>
+            <if test="delflg != null and delflg !=''">delflg,</if>
+            <if test="createtime != null and createtime !=''">createtime,</if>
+
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            <if test="cid != null and cid !=''">#{cid},</if>
+            <if test="bid != null and bid !=''">#{bid},</if>
+            <if test="uid != null and uid !=''">#{uid},</if>
+            <if test="delflg != null and delflg !=''">#{delflg},</if>
+            <if test="createtime != null and createtime !=''">#{createtime},</if>
+        </trim>
+        )
+    </insert>
+
+    <select id="selctCollectByUidAndBid" parameterType="string" resultType="string">
+        select cid from zj_collection
+        where bid = #{bid} and uid = #{uid} and delflg = '00'
+    </select>
+
+    <update id="updateCollection" parameterType="string" >
+        update zj_collection set delflg = #{delflg} where
+        bid = #{bid} and uid = #{uid}
+    </update>
+    
+    <select id="selectCollectionByUname" parameterType="map" resultType="map">
+        select a.cid,b.bid,b.btitle,b.createtime,c.uname from zj_collection a left join zj_blog b on a.bid = b.bid
+LEFT JOIN zj_user c ON a.uid = c.uid WHERE c.uname = #{username} AND a.delflg = '00' order by a.createtime
+        <if test="offset != null and size != null">
+            limit #{offset},#{size}
+        </if>
+    </select>
+
+    <select id="selectAllCollectionNumByUname" parameterType="string" resultType="integer">
+        select count(1) from zj_collection a left join zj_blog b on a.bid = b.bid
+LEFT JOIN zj_user c ON a.uid = c.uid WHERE c.uname = #{username} AND a.delflg = '00'
+    </select>
+
+
+    <update id="updateCollectionBycid" parameterType="string">
+        update zj_collection set delflg = '01' where cid = #{cid}
+    </update>
+
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.blog.mapper.UserMapper">
+    
+
+
+    <select id="selectUserByUsernameAndPwd" parameterType="user" resultType="map">
+        select a.uid,a.uname,b.rid,b.rname as `identity` from zj_user a left join zj_role b on a.identity = b.rid where a.uname = #{uname}
+        and a.pwd = #{pwd} and a.delflg = #{delflg}
+    </select>
+
+    <insert id="addNormalUser" parameterType="user" useGeneratedKeys="true" keyProperty="uid">
+      insert into zj_user (
+        <trim suffixOverrides=",">
+            <if test="uid != null and uid != ''">uid,</if>
+            <if test="uname != null and uname != ''">uname,</if>
+            <if test="realname != null and realname != ''">realname,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="pwd != null and pwd != ''">pwd,</if>
+            <if test="img != null and img != ''">img,</if>
+            <if test="identity != null and identity != ''">identity,</if>
+            <if test="createtime != null and createtime != ''">createtime,</if>
+            <if test="updatetime != null and updatetime != ''">updatetime,</if>
+            <if test="delflg != null and delflg != ''">delflg,</if>
+            <if test="power != null and power != ''">power,</if>
+            <if test="birthday != null and birthday != ''">birthday,</if>
+        </trim>
+
+      ) values (
+        <trim suffixOverrides=",">
+            <if test="uid != null and uid != ''">#{uid},</if>
+            <if test="uname != null and uname != ''">#{uname},</if>
+            <if test="realname != null and realname != ''">#{realname},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="pwd != null and pwd != ''">#{pwd},</if>
+            <if test="img != null and img != ''">#{img},</if>
+            <if test="identity != null and identity != ''">#{identity},</if>
+            <if test="createtime != null and createtime != ''">#{createtime},</if>
+            <if test="updatetime != null and updatetime != ''">#{updatetime},</if>
+            <if test="delflg != null and delflg != ''">#{delflg},</if>
+            <if test="power != null and power != ''">#{power},</if>
+            <if test="birthday != null and birthday != ''">#{birthday},</if>
+        </trim>
+        )
+        <selectKey resultType="string" keyProperty="uid">
+            select @@IDENTITY as id
+        </selectKey>
+    </insert>
+
+    <resultMap id="userAndRoleMap" type="user">
+        <!-- property：主键在pojo中的属性名 -->
+        <!-- column：主键在数据库中的列名 -->
+        <id property="uid" column="uid" />
+        <result property="uname" column="uname" />
+        <result property="realname" column="realname" />
+        <result property="address" column="address" />
+        <result property="phone" column="phone" />
+        <result property="email" column="email" />
+        <result property="sex" column="sex" />
+        <result property="img" column="img" />
+        <result property="identity" column="identity" />
+        <result property="createtime" column="createtime" />
+        <result property="birthday" column="birthday" />
+        <!-- association ：配置一对一属性 -->
+        <!-- property:order里面的User属性名 -->
+        <!-- javaType:属性类型 -->
+        <association property="role" javaType="role">
+            <id property="rid" column="rid" />
+            <result property="rname" column="rname"/>
+        </association>
+    </resultMap>
+    <select id="selectUserByUid" parameterType="string" resultMap="userAndRoleMap">
+        select a.uid,a.uname,a.realname,a.address,a.phone,a.email,a.sex,a.img,a.identity,a.createtime,a.birthday,b.rid,b.rname
+         from zj_user a left join zj_role b on a.identity = b.rid where a.uname = #{uname} and a.delflg = "00"
+    </select>
+
+    <update id="updateUser" parameterType="user" >
+        update zj_user set
+        <trim suffixOverrides=",">
+            <if test="realname != null and realname != ''">realname = #{realname},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="pwd != null and pwd != ''">pwd = #{pwd},</if>
+            <if test="img != null and img != ''">img = #{img},</if>
+            <if test="identity != null and identity != ''">`identity` = #{identity},</if>
+            <if test="createtime != null and createtime != ''">createtime = #{createtime},</if>
+            <if test="updatetime != null and updatetime != ''">updatetime = #{updatetime},</if>
+            <if test="delflg != null and delflg != ''">delflg = #{delflg},</if>
+            <if test="power != null and power != ''">power = #{power},</if>
+            <if test="birthday != null and birthday != ''">birthday = #{birthday},</if>
+        </trim>
+        where uname = #{uname}
+    </update>
+
+    <select id="selectUidByUname" parameterType="string" resultType="string">
+        select uid from zj_user where uname = #{uname}
+    </select>
+    
+    <select id="selectUserExceptSAdminCount" resultType="integer">
+        select count(1) from zj_user a
+        left join zj_role b on a.identity = b.rid
+        where b.rname != '超管';
+    </select>
+
+    <select id="selectUserExceptSAdmin" parameterType="integer" resultType="map">
+        select a.uname,a.uid,b.rname,b.rid from zj_user a
+        left join zj_role b on a.identity = b.rid
+        where b.rname != '超管' order by a.createtime limit #{offset},#{size}
+    </select>
+
+    <select id="selectUsernamebyUsername" parameterType="string" resultType="string">
+        select uname from zj_user where uname = #{uname} and delflg = '00'
+    </select>
+
+    <update id="updateNormaluserWithIdentity" parameterType="string">
+        update zj_user set `identity` = #{identity} where
+        uname = #{uname} and delflg = '00'
+    </update>
+</mapper>
