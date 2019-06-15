@@ -1058,6 +1058,7 @@ function cancelcollect(cid) {
 
 function logoutfn() {
     $.cookie("token", null,{path:"/"});
+    $.cookie("username", null,{path:"/"});
 }
 
 function showmyblogs() {
