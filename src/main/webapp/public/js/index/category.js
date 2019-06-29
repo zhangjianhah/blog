@@ -30,7 +30,7 @@ class Category extends React.Component {
             <div>
 
                 <div>
-                    <div className="contents pull-left categorys" style={{width:"20%"}}>
+                    <div className="contents pull-left categorys" style={{width:"12%"}}>
                         <ul className="list-group">
                             <li className={chooseCategory == -1 ? 'list-group-item active' : 'list-group-item'}  onClick={()=>that.clickCategory(-1)}>
                                 所有

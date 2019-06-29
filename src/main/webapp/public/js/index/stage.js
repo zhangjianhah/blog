@@ -4,7 +4,6 @@ class Stage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            chooseCategory:-1,//点击选中的种类
             categoryList:[],//种类列表
             blogList:[],
             keyWord:'',
@@ -52,12 +51,12 @@ class Stage extends React.Component {
         });
     }
 
-    clickCategory(index){
+    clickCategory = index => {
         let categoryid = index == -1 ? '' : this.state.categoryList[index].cid;
         this.setState({
-            currentCategory:categoryid
-        })
-        this.getmyblog();
+            currentCategory:categoryid,
+            offset:0,
+        },()=>{this.getmyblog()});
 
     }
     //获取博客（分页）
@@ -68,8 +67,8 @@ class Stage extends React.Component {
             data:{
                 "offset":that.state.offset,
                 "size":that.state.size,
-                "keyword":that.state.keyWord,
-                "categoryid":that.state.currentCategory
+                "keyword": that.state.keyWord,
+                "categoryid": that.state.currentCategory
             },
             type:"GET",
             success:function (data) {
@@ -98,7 +97,6 @@ class Stage extends React.Component {
         });
     }
     submitFunc(){
-        console.log(1)
         this.getmyblog()
     }
 
@@ -165,7 +163,7 @@ class Stage extends React.Component {
                     baseUrl = {this.state.baseUrl}
                     changeKeyWord={keyWord => that.changeKeyWord(keyWord)}/>
                 <Category categoryList = {this.state.categoryList}
-                          clickCategory = {index => this.clickCategory(index)}
+                          clickCategory = {this.clickCategory}
                 />
                 <Blog blogList={that.state.blogList} />
             </div>
