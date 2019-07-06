@@ -2,7 +2,6 @@ package com.zj.blog.controller;
 
 import com.zj.blog.exceptioncontroller.Result;
 import com.zj.blog.exceptioncontroller.UserNotLoginException;
-import com.zj.blog.myutils.JWTUtil;
 import com.zj.blog.myutils.Jutil;
 import com.zj.blog.myutils.Subscriber;
 import com.zj.blog.service.RoleService;

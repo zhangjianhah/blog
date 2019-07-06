@@ -1,10 +1,8 @@
 package com.zj.blog.controller;
 
 
-import com.zj.blog.myutils.JWTUtil;
-import com.zj.blog.myutils.NormalUtil;
+import com.zj.blog.myutils.Jutil;
 import com.zj.blog.myutils.Subscriber;
-import com.zj.blog.pojo.Star;
 import com.zj.blog.service.BlogService;
 import com.zj.blog.service.CollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ public class CollectionController {
 				getToken = cookie.getValue();
 			}
 		}
-		subscriber = JWTUtil.unsignToken(getToken,Subscriber.class);
+		subscriber = Jutil.unsignToken(getToken,Subscriber.class);
 		String uid = subscriber.getId();
 		collectionService.updateCollection(uid,bid,delflg);
 

@@ -1,14 +1,14 @@
 package com.zj.blog.interceptor;
 
-import com.zj.blog.myutils.JWTUtil;
+import com.zj.blog.myutils.Jutil;
 import com.zj.blog.myutils.NormalUtil;
 import com.zj.blog.myutils.Subscriber;
 import com.zj.blog.nosql.PowerRedis;
 import com.zj.blog.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,10 +16,10 @@ import java.util.Map;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
-	@Resource(name = "roleService")
+	@Autowired
 	private RoleService roleService;
 
-	@Resource(name = "powerRedis")
+	@Autowired
 	private PowerRedis powerRedis;
 
 
@@ -54,7 +54,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			subscriber = new Subscriber();
 			subscriber.setIdentity("游客");
 		}else {
-			subscriber = JWTUtil.unsignToken(getToken,Subscriber.class);
+			subscriber = Jutil.unsignToken(getToken,Subscriber.class);
 		}
 		url = NormalUtil.changeUrlVariable(url);
 
@@ -77,19 +77,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 				return true;
 			}
 		}
-
-
-		//Map<String,Object> map = roleService.selectOnePower(method,subscriber.getIdentity(),url);
-
-		//判断权限
-//		if(map == null){
-//			//为空表示权限不足
-//			System.out.println("权限不足");
-//			return false;
-//
-//		}else{
-//			return true;
-//		}
 
 
 	}

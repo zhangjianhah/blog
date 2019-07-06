@@ -81,7 +81,7 @@ public class BlogController {
 				break;
 			}
 		}
-		Subscriber subscriber = JWTUtil.unsignToken(getToken,Subscriber.class);
+		Subscriber subscriber = Jutil.unsignToken(getToken,Subscriber.class);
 		String uid = subscriber.getId();
 
 		if(img != null && img.getSize() != 0){
